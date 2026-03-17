@@ -1,0 +1,2 @@
+Requirement already satisfied: npm in /home/scola/Maintenance/jupyter-book2/jupyterbook2env/lib/python3.12/site-packages (0.1.1)
+Requirement already satisfied: optional-django==0.1.0 in /home/scola/Maintenance/jupyter-book2/jupyterbook2env/lib/python3.12/site-packages (from npm) (0.1.0)

@@ -1,0 +1,59 @@
+Traceback (most recent call last):
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/scola/Maintenance/jupyter-book/jupyterbookenv/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Load cities geolocation
+file = path2sources + 'villes.csv'
+with open (file, 'r') as f:
+    content = f.read ()
+    f.close ()
+lines = content.split ('\n')
+villes = {}
+for line in lines [:-1]:
+    nom, lat, long = line.split (',')
+    villes [nom.lower ()] = (lat, long)
+
+gdf_villes = gpd.GeoDataFrame(
+    {"nom": list(villes.keys())},
+    geometry=[Point(lon, lat) for lat, lon in villes.values()],
+    crs="EPSG:4326",
+)
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mFileNotFoundError[39m                         Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[4][39m[32m, line 3[39m
+[32m      1[39m [38;5;66;03m# Load cities geolocation[39;00m
+[32m      2[39m file = path2sources + [33m'[39m[33mvilles.csv[39m[33m'[39m
+[32m----> [39m[32m3[39m [38;5;28;01mwith[39;00m [38;5;28;43mopen[39;49m[43m [49m[43m([49m[43mfile[49m[43m,[49m[43m [49m[33;43m'[39;49m[33;43mr[39;49m[33;43m'[39;49m[43m)[49m [38;5;28;01mas[39;00m f:
+[32m      4[39m     content = f.read ()
+[32m      5[39m     f.close ()
+
+[36mFile [39m[32m~/ADMINISTRATIF/GDR_grand-gap/cartographie_equipes/widegapmap/widegapmapenv/lib/python3.12/site-packages/IPython/core/interactiveshell.py:346[39m, in [36m_modified_open[39m[34m(file, *args, **kwargs)[39m
+[32m    339[39m [38;5;28;01mif[39;00m file [38;5;129;01min[39;00m {[32m0[39m, [32m1[39m, [32m2[39m}:
+[32m    340[39m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[32m    341[39m         [33mf[39m[33m"[39m[33mIPython won[39m[33m'[39m[33mt let you open fd=[39m[38;5;132;01m{[39;00mfile[38;5;132;01m}[39;00m[33m by default [39m[33m"[39m
+[32m    342[39m         [33m"[39m[33mas it is likely to crash IPython. If you know what you are doing, [39m[33m"[39m
+[32m    343[39m         [33m"[39m[33myou can use builtins[39m[33m'[39m[33m open.[39m[33m"[39m
+[32m    344[39m     )
+[32m--> [39m[32m346[39m [38;5;28;01mreturn[39;00m [43mio_open[49m[43m([49m[43mfile[49m[43m,[49m[43m [49m[43m*[49m[43margs[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
+
+[31mFileNotFoundError[39m: [Errno 2] No such file or directory: './sources/villes.csv'
+
