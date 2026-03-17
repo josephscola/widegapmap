@@ -27,7 +27,7 @@ lines = content.split ('\n')
 villes = {}
 for line in lines [:-1]:
     nom, lat, long = line.split (',')
-    villes [nom.lower ()] = (lat, long)
+    villes [majuscules_aux_villes (nom)] = (lat, long)
 
 gdf_villes = gpd.GeoDataFrame(
     {"nom": list(villes.keys())},
@@ -39,7 +39,7 @@ gdf_villes = gpd.GeoDataFrame(
 
 [31m---------------------------------------------------------------------------[39m
 [31mFileNotFoundError[39m                         Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[4][39m[32m, line 3[39m
+[36mCell[39m[36m [39m[32mIn[3][39m[32m, line 3[39m
 [32m      1[39m [38;5;66;03m# Load cities geolocation[39;00m
 [32m      2[39m file = path2sources + [33m'[39m[33mvilles.csv[39m[33m'[39m
 [32m----> [39m[32m3[39m [38;5;28;01mwith[39;00m [38;5;28;43mopen[39;49m[43m [49m[43m([49m[43mfile[49m[43m,[49m[43m [49m[33;43m'[39;49m[33;43mr[39;49m[33;43m'[39;49m[43m)[49m [38;5;28;01mas[39;00m f:
