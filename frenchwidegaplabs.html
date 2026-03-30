@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'frenchwidegaplabs';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Welcome to your Jupyter Book" href="intro.html" />
+    <link rel="prev" title="Recensement des laboratoires grand gap (en France)" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -174,7 +174,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to your Jupyter Book
+                    Recensement des laboratoires grand gap (en France)
                 </a>
             </li>
         </ul>
@@ -377,7 +377,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="laboratoires-cnrs-grands-gap">
+<h1>Laboratoires CNRS grands gap<a class="headerlink" href="#laboratoires-cnrs-grands-gap" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
@@ -385,6 +387,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">pygadm</span>
 <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span>
 <span class="kn">from</span> <span class="nn">ipyleaflet</span> <span class="kn">import</span> <span class="n">GeoJSON</span><span class="p">,</span> <span class="n">Map</span><span class="p">,</span> <span class="n">basemaps</span>
+<span class="kn">import</span> <span class="nn">folium</span>
 <span class="kn">import</span> <span class="nn">openpyxl</span> <span class="k">as</span> <span class="nn">pyxl</span>
 <span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;scola&#39;</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -492,13 +495,137 @@ document.write(`
 </div>
 </div>
 </div>
-<section class="tex2jax_ignore mathjax_ignore" id="laboratoires-cnrs-grands-gap">
-<h1>Laboratoires CNRS grands gap<a class="headerlink" href="#laboratoires-cnrs-grands-gap" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">category</span> <span class="o">=</span> <span class="s1">&#39;Ville&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert data dict to GeoPandasDataFrame </span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Acronyme labo&#39;</span><span class="p">,</span> <span class="s1">&#39;UMR/UPR&#39;</span><span class="p">,</span> <span class="s1">&#39;Institut principal&#39;</span><span class="p">,</span> <span class="s1">&#39;Ville&#39;</span><span class="p">]</span>
+<span class="n">gdf_Labs</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">(</span><span class="n">Labs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="p">[</span><span class="n">cols</span><span class="p">],</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span> <span class="k">for</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="ow">in</span> <span class="p">[</span><span class="n">d</span> <span class="p">[</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">Labs</span><span class="o">.</span><span class="n">values</span> <span class="p">()]],</span>
+    <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">VersaillesLabs</span> <span class="o">=</span> <span class="n">gdf_Labs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf_Labs</span><span class="p">[</span><span class="s1">&#39;Ville&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;Versailles&#39;</span><span class="p">])]</span>
+<span class="n">VersaillesLabs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Acronyme labo</th>
+      <th>UMR/UPR</th>
+      <th>Institut principal</th>
+      <th>Ville</th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>UMR8635</th>
+      <td>GEMaC</td>
+      <td>UMR8635</td>
+      <td>Physique</td>
+      <td>Versailles</td>
+      <td>POINT (2.1301 48.8014)</td>
+    </tr>
+    <tr>
+      <th>UMR8180</th>
+      <td>ILV</td>
+      <td>UMR8180</td>
+      <td>Chimie</td>
+      <td>Versailles</td>
+      <td>POINT (2.1301 48.8014)</td>
+    </tr>
+    <tr>
+      <th>UMR8029</th>
+      <td>SATIE</td>
+      <td>UMR8029</td>
+      <td>Ingénierie</td>
+      <td>Versailles</td>
+      <td>POINT (2.1301 48.8014)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load other labs data in a dict</span>
+<span class="n">datafile</span> <span class="o">=</span> <span class="n">path2sources</span> <span class="o">+</span> <span class="s1">&#39;Liste Labo Equipes Personnes_ml_yc_v2.xlsx&#39;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pyxl</span><span class="o">.</span><span class="n">load_workbook</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">datafile</span><span class="p">,</span> <span class="n">data_only</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># open the first sheet as var sheet</span>
+<span class="n">datasheet</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">worksheets</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="n">otherLabs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">mainkey</span> <span class="o">=</span> <span class="s1">&#39;Acronyme labo&#39;</span> 
+
+<span class="c1"># lecture des noms de colonnes</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">colname</span> <span class="o">=</span> <span class="n">datasheet</span><span class="o">.</span><span class="n">cell</span> <span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">colname</span> <span class="o">!=</span> <span class="kc">None</span> <span class="p">):</span>
+    <span class="n">columns</span> <span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+    <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">colname</span> <span class="o">=</span> <span class="n">datasheet</span><span class="o">.</span><span class="n">cell</span> <span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">rowname</span> <span class="o">=</span> <span class="n">datasheet</span><span class="o">.</span><span class="n">cell</span> <span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">columns</span> <span class="p">[</span><span class="n">mainkey</span><span class="p">])</span><span class="o">.</span><span class="n">value</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">rowname</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">lab</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">keys</span> <span class="p">():</span>
+        <span class="n">lab</span> <span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">datasheet</span><span class="o">.</span><span class="n">cell</span> <span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">columns</span> <span class="p">[</span><span class="n">column_name</span><span class="p">])</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;Ville&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">majuscules_aux_villes</span> <span class="p">(</span><span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;Ville&#39;</span><span class="p">])</span>
+    <span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">villes</span> <span class="p">[</span><span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;Ville&#39;</span><span class="p">]]</span>
+    <span class="n">otherLabs</span> <span class="p">[</span><span class="n">lab</span> <span class="p">[</span><span class="n">mainkey</span><span class="p">]]</span> <span class="o">=</span> <span class="n">lab</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">rowname</span> <span class="o">=</span> <span class="n">datasheet</span><span class="o">.</span><span class="n">cell</span> <span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">columns</span> <span class="p">[</span><span class="n">mainkey</span><span class="p">])</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert data dict to GeoPandasDataFrame </span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Acronyme labo&#39;</span><span class="p">,</span> <span class="s1">&#39;Institut principal&#39;</span><span class="p">,</span> <span class="s1">&#39;Ville&#39;</span><span class="p">]</span>
+<span class="n">gdf_otherLabs</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">(</span><span class="n">otherLabs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="p">[</span><span class="n">cols</span><span class="p">],</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span> <span class="k">for</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="ow">in</span> <span class="p">[</span><span class="n">d</span> <span class="p">[</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">otherLabs</span><span class="o">.</span><span class="n">values</span> <span class="p">()]],</span>
+    <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CNRS labs</span>
+<span class="n">category</span> <span class="o">=</span> <span class="s1">&#39;Ville&#39;</span>
 <span class="n">sites</span> <span class="o">=</span> <span class="nb">list</span> <span class="p">(</span><span class="n">gdf_Labs</span> <span class="p">[</span><span class="n">category</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span> <span class="p">())</span>
 <span class="n">Labsonsites</span> <span class="o">=</span> <span class="p">{}</span>
+
 <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">gdf_Labs</span><span class="o">.</span><span class="n">loc</span> <span class="p">[</span><span class="n">gdf_Labs</span> <span class="p">[</span><span class="n">category</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">site</span><span class="p">])]</span>
     <span class="n">labsonsite</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
@@ -513,20 +640,59 @@ document.write(`
         <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span>
     <span class="p">}</span>
     <span class="n">Labsonsites</span> <span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>    
+    
+<span class="n">gdf_Labsonsites</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">(</span><span class="n">Labsonsites</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1"># other labs</span>
+<span class="n">category</span> <span class="o">=</span> <span class="s1">&#39;Ville&#39;</span>
+<span class="n">sites</span> <span class="o">=</span> <span class="nb">list</span> <span class="p">(</span><span class="n">gdf_otherLabs</span> <span class="p">[</span><span class="n">category</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span> <span class="p">())</span>
+<span class="n">otherLabsonsites</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">gdf_otherLabs</span><span class="o">.</span><span class="n">loc</span> <span class="p">[</span><span class="n">gdf_otherLabs</span> <span class="p">[</span><span class="n">category</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">site</span><span class="p">])]</span>
+    <span class="n">labsonsite</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">labcode</span><span class="p">,</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span> <span class="p">():</span>
+        <span class="n">labsonsite</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lab</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;Acronyme labo&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">lab</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;Institut principal&#39;</span><span class="p">]</span><span class="si">}</span><span class="s1">), &#39;</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;ville&#39;</span><span class="p">:</span> <span class="n">site</span><span class="p">,</span>
+        <span class="s1">&#39;nombre de labos CNRS&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+        <span class="s1">&#39;noms des labos&#39;</span><span class="p">:</span> <span class="n">labsonsite</span> <span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+        <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="n">lab</span> <span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">otherLabsonsites</span> <span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>  
+
+<span class="n">gdf_otherLabsonsites</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">(</span><span class="n">otherLabsonsites</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf_Labsonsites</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span> <span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="p">(</span><span class="n">Labsonsites</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-    <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span>
-<span class="p">)</span>
-<span class="n">gdf_Labsonsites</span><span class="o">.</span><span class="n">explore</span> <span class="p">(</span><span class="n">popup</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># display on map</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">gdf_Labsonsites</span><span class="o">.</span><span class="n">explore</span> <span class="p">(</span><span class="n">popup</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                          <span class="n">marker_kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
-                         <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#00294bff&#39;</span>
+                         <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#00294bff&#39;</span><span class="p">,</span>
+                         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;CNRS labs&#39;</span>
                          <span class="p">)</span>
+
+
+
+<span class="n">gdf_otherLabsonsites</span><span class="o">.</span><span class="n">explore</span> <span class="p">(</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">,</span> <span class="n">popup</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                         <span class="n">marker_kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+                         <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#e30a1dff&#39;</span><span class="p">,</span>
+                         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;non CNRS labs&#39;</span>
+                         <span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">LayerControl</span><span class="p">()</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">m</span>
 </pre></div>
 </div>
 </div>
@@ -550,7 +716,7 @@ document.write(`
             &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
             &lt;style&gt;
-                #map_91d0d592edc3833dcf8e2b6965ed7202 {
+                #map_66d7a15ca180d0845fda651da01108d7 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -615,18 +781,50 @@ document.write(`
                         }
                     &lt;/style&gt;
             
+    
+                    &lt;style&gt;
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+            
+    
+                    &lt;style&gt;
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+            
 &lt;/head&gt;
 &lt;body&gt;
     
     
-            &lt;div class=&quot;folium-map&quot; id=&quot;map_91d0d592edc3833dcf8e2b6965ed7202&quot; &gt;&lt;/div&gt;
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_66d7a15ca180d0845fda651da01108d7&quot; &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_91d0d592edc3833dcf8e2b6965ed7202 = L.map(
-                &quot;map_91d0d592edc3833dcf8e2b6965ed7202&quot;,
+            var map_66d7a15ca180d0845fda651da01108d7 = L.map(
+                &quot;map_66d7a15ca180d0845fda651da01108d7&quot;,
                 {
                     center: [46.96285, 3.0371500000000005],
                     crs: L.CRS.EPSG3857,
@@ -638,13 +836,13 @@ document.write(`
 
                 }
             );
-            L.control.scale().addTo(map_91d0d592edc3833dcf8e2b6965ed7202);
+            L.control.scale().addTo(map_66d7a15ca180d0845fda651da01108d7);
 
             
 
         
     
-            var tile_layer_a62bb683f65423d2c5a3609f148166a3 = L.tileLayer(
+            var tile_layer_345ae137e4f2745d20ccd4911c142f27 = L.tileLayer(
                 &quot;https://tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
@@ -661,28 +859,28 @@ document.write(`
             );
         
     
-            tile_layer_a62bb683f65423d2c5a3609f148166a3.addTo(map_91d0d592edc3833dcf8e2b6965ed7202);
+            tile_layer_345ae137e4f2745d20ccd4911c142f27.addTo(map_66d7a15ca180d0845fda651da01108d7);
         
     
-            map_91d0d592edc3833dcf8e2b6965ed7202.fitBounds(
+            map_66d7a15ca180d0845fda651da01108d7.fitBounds(
                 [[43.2965, -1.6778], [50.6292, 7.7521]],
                 {}
             );
         
     
-        function geo_json_d6fca0b93b064a5cc0021a53cb99ed26_styler(feature) {
+        function geo_json_7bbd9553ffda93170a9615d5b87ab62b_styler(feature) {
             switch(feature.id) {
                 default:
                     return {&quot;color&quot;: &quot;#00294bff&quot;, &quot;fillColor&quot;: &quot;#00294bff&quot;, &quot;fillOpacity&quot;: 0.5, &quot;weight&quot;: 2};
             }
         }
-        function geo_json_d6fca0b93b064a5cc0021a53cb99ed26_highlighter(feature) {
+        function geo_json_7bbd9553ffda93170a9615d5b87ab62b_highlighter(feature) {
             switch(feature.id) {
                 default:
                     return {&quot;fillOpacity&quot;: 0.75};
             }
         }
-        function geo_json_d6fca0b93b064a5cc0021a53cb99ed26_pointToLayer(feature, latlng) {
+        function geo_json_7bbd9553ffda93170a9615d5b87ab62b_pointToLayer(feature, latlng) {
             var opts = {
   &quot;stroke&quot;: true,
   &quot;color&quot;: &quot;#3388ff&quot;,
@@ -700,46 +898,46 @@ document.write(`
   &quot;radius&quot;: 5,
 };
             
-            let style = geo_json_d6fca0b93b064a5cc0021a53cb99ed26_styler(feature)
+            let style = geo_json_7bbd9553ffda93170a9615d5b87ab62b_styler(feature)
             Object.assign(opts, style)
             
             return new L.CircleMarker(latlng, opts)
         }
 
-        function geo_json_d6fca0b93b064a5cc0021a53cb99ed26_onEachFeature(feature, layer) {
+        function geo_json_7bbd9553ffda93170a9615d5b87ab62b_onEachFeature(feature, layer) {
 
             layer.on({
                 mouseout: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                            geo_json_d6fca0b93b064a5cc0021a53cb99ed26.resetStyle(e.target);
+                            geo_json_7bbd9553ffda93170a9615d5b87ab62b.resetStyle(e.target);
                     }
                 },
                 mouseover: function(e) {
                     if(typeof e.target.setStyle === &quot;function&quot;){
-                        const highlightStyle = geo_json_d6fca0b93b064a5cc0021a53cb99ed26_highlighter(e.target.feature)
+                        const highlightStyle = geo_json_7bbd9553ffda93170a9615d5b87ab62b_highlighter(e.target.feature)
                         e.target.setStyle(highlightStyle);
                     }
                 },
             });
         };
-        var geo_json_d6fca0b93b064a5cc0021a53cb99ed26 = L.geoJson(null, {
-                onEachFeature: geo_json_d6fca0b93b064a5cc0021a53cb99ed26_onEachFeature,
+        var geo_json_7bbd9553ffda93170a9615d5b87ab62b = L.geoJson(null, {
+                onEachFeature: geo_json_7bbd9553ffda93170a9615d5b87ab62b_onEachFeature,
             
-                style: geo_json_d6fca0b93b064a5cc0021a53cb99ed26_styler,
-                pointToLayer: geo_json_d6fca0b93b064a5cc0021a53cb99ed26_pointToLayer,
+                style: geo_json_7bbd9553ffda93170a9615d5b87ab62b_styler,
+                pointToLayer: geo_json_7bbd9553ffda93170a9615d5b87ab62b_pointToLayer,
             ...{
 }
         });
 
-        function geo_json_d6fca0b93b064a5cc0021a53cb99ed26_add (data) {
-            geo_json_d6fca0b93b064a5cc0021a53cb99ed26
+        function geo_json_7bbd9553ffda93170a9615d5b87ab62b_add (data) {
+            geo_json_7bbd9553ffda93170a9615d5b87ab62b
                 .addData(data);
         }
-            geo_json_d6fca0b93b064a5cc0021a53cb99ed26_add({&quot;bbox&quot;: [-1.6778, 43.2965, 7.7521, 50.6292], &quot;features&quot;: [{&quot;bbox&quot;: [4.8357, 45.764, 4.8357, 45.764], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.8357, 45.764], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lyon&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;AMPERE UMR5005 (Ing\u00e9nierie), IRCELYON UMR5256 (Chimie), LMI UMR5615 (Chimie)&quot;, &quot;ville&quot;: &quot;Lyon&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.17, 48.7308, 2.17, 48.7308], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.17, 48.7308], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Saclay&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;C2N UMR9001 (Physique), LSI UMR7642 (Physique), LUMIN UMR9024 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Saclay&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.4442, 43.6047, 1.4442, 43.6047], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.4442, 43.6047], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Toulouse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;4&quot;, &quot;noms des labos&quot;: &quot;CEMES UPR8011 (Physique), CIRIMAT UMR5085 (Chimie), LAAS UPR8001 (Informatique), LAPLACE UMR5213 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Toulouse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-0.3707, 49.1829, -0.3707, 49.1829], &quot;geometry&quot;: {&quot;coordinates&quot;: [-0.3707, 49.1829], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Caen&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;CIMAP UMR6252 (Physique), CRISMAT  UMR6508 (Chimie), GREYC UMR6072 (Informatique)&quot;, &quot;ville&quot;: &quot;Caen&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.3698, 43.2965, 5.3698, 43.2965], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.3698, 43.2965], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Marseille&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;4&quot;, &quot;noms des labos&quot;: &quot;CINAM UMR7325 (Physique), IM2NP UMR7334 (Physique), LP3 UMR7341 (Ing\u00e9nierie), PIIM UMR7345 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Marseille&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.0559, 43.6394, 7.0559, 43.6394], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.0559, 43.6394], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Valbonne&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;CRHEA UMR7073 (Physique)&quot;, &quot;ville&quot;: &quot;Valbonne&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.7245, 45.1885, 5.7245, 45.1885], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.7245, 45.1885], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Grenoble&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;7&quot;, &quot;noms des labos&quot;: &quot;CROMA UMR5130 (Ing\u00e9nierie), G2Elab UMR5269 (Ing\u00e9nierie), LMGP UMR5628 (Chimie), LPSC UMR5821 (IN2P3), LTM UMR5129 (Ing\u00e9nierie), N\u00e9el UPR2940 (Physique), SIMAP UMR5266 (Chimie)&quot;, &quot;ville&quot;: &quot;Grenoble&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.601, 48.853, 2.601, 48.853], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.601, 48.853], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Champs-sur-Marne&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;ESYCOM UMR9007 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Champs-sur-Marne&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.1333, 48.6833, 2.1333, 48.6833], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.1333, 48.6833], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Gif-sur-Yvette&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Geeps UMR8507 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Gif-sur-Yvette&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.1301, 48.8014, 2.1301, 48.8014], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.1301, 48.8014], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Versailles&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;GEMaC UMR8635 (Physique), ILV  UMR8180 (Chimie), SATIE UMR8029 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Versailles&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [6.1757, 49.1193, 6.1757, 49.1193], &quot;geometry&quot;: {&quot;coordinates&quot;: [6.1757, 49.1193], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Metz&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GeorgiaTech IRL2958 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Metz&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.0993, 49.4432, 1.0993, 49.4432], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.0993, 49.4432], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Rouen&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GPM UMR6634 (Physique)&quot;, &quot;ville&quot;: &quot;Rouen&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [0.6848, 47.3941, 0.6848, 47.3941], &quot;geometry&quot;: {&quot;coordinates&quot;: [0.6848, 47.3941], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Tours&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GREMAN UMR7347 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Tours&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.7521, 48.5734, 7.7521, 48.5734], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.7521, 48.5734], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Strasbourg&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;IC UMR7177 (Chimie), Icube UMR7357   (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Strasbourg&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-0.5792, 44.8378, -0.5792, 44.8378], &quot;geometry&quot;: {&quot;coordinates&quot;: [-0.5792, 44.8378], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Bordeaux&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;ICMCB  UMR5026 (Chimie), IMS UMR5218 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Bordeaux&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.8772, 43.6119, 3.8772, 43.6119], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.8772, 43.6119], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Montpellier&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;IEM UMR5635 (Chimie), IES ? UMR5214 (Ing\u00e9nierie), L2C UMR5221 (Physique)&quot;, &quot;ville&quot;: &quot;Montpellier&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.0573, 50.6292, 3.0573, 50.6292], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.0573, 50.6292], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lille&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;IEMN UMR8520 (Ing\u00e9nierie), UCCS UMR8181 (Chimie)&quot;, &quot;ville&quot;: &quot;Lille&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [6.1844, 48.6921, 6.1844, 48.6921], &quot;geometry&quot;: {&quot;coordinates&quot;: [6.1844, 48.6921], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nancy&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IJL UMR7198 (Chimie)&quot;, &quot;ville&quot;: &quot;Nancy&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-1.5536, 47.2184, -1.5536, 47.2184], &quot;geometry&quot;: {&quot;coordinates&quot;: [-1.5536, 47.2184], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nantes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IMN UMR6502 (Chimie)&quot;, &quot;ville&quot;: &quot;Nantes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.7772, 45.7717, 4.7772, 45.7717], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.7772, 45.7717], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;\u00c9cully&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;INL UMR5270 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;\u00c9cully&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.262, 43.7102, 7.262, 43.7102], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.262, 43.7102], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nice&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;InPhyNi UMR7010 (Physique)&quot;, &quot;ville&quot;: &quot;Nice&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.3522, 48.8566, 2.3522, 48.8566], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.3522, 48.8566], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Paris&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;INSP UMR7588 (Physique), IRCP UMR8247 (Chimie)&quot;, &quot;ville&quot;: &quot;Paris&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.087, 45.7772, 3.087, 45.7772], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.087, 45.7772], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Clermont-Ferrand&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Inst. PASCAL UMR6602 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Clermont-Ferrand&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.3359, 47.7508, 7.3359, 47.7508], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.3359, 47.7508], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Mulhouse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IS2M UMR7361 (Chimie)&quot;, &quot;ville&quot;: &quot;Mulhouse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-1.6778, 48.1173, -1.6778, 48.1173], &quot;geometry&quot;: {&quot;coordinates&quot;: [-1.6778, 48.1173], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Rennes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;ISCR UMR6226 (Chimie)&quot;, &quot;ville&quot;: &quot;Rennes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.0744, 48.2973, 4.0744, 48.2973], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.0744, 48.2973], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Troyes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;L2N UMR7076 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Troyes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.345, 48.9607, 2.345, 48.9607], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.345, 48.9607], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Villetaneuse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;LSPM UPR3407  (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Villetaneuse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.2611, 45.8336, 1.2611, 45.8336], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.2611, 45.8336], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Limoges&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;XLIM UMR7252 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Limoges&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_7bbd9553ffda93170a9615d5b87ab62b_add({&quot;bbox&quot;: [-1.6778, 43.2965, 7.7521, 50.6292], &quot;features&quot;: [{&quot;bbox&quot;: [4.8357, 45.764, 4.8357, 45.764], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.8357, 45.764], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lyon&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;AMPERE UMR5005 (Ing\u00e9nierie), IRCELYON UMR5256 (Chimie), LMI UMR5615 (Chimie)&quot;, &quot;ville&quot;: &quot;Lyon&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.17, 48.7308, 2.17, 48.7308], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.17, 48.7308], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Saclay&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;C2N UMR9001 (Physique), LSI UMR7642 (Physique), LUMIN UMR9024 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Saclay&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.4442, 43.6047, 1.4442, 43.6047], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.4442, 43.6047], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Toulouse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;4&quot;, &quot;noms des labos&quot;: &quot;CEMES UPR8011 (Physique), CIRIMAT UMR5085 (Chimie), LAAS UPR8001 (Informatique), LAPLACE UMR5213 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Toulouse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-0.3707, 49.1829, -0.3707, 49.1829], &quot;geometry&quot;: {&quot;coordinates&quot;: [-0.3707, 49.1829], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Caen&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;CIMAP UMR6252 (Physique), CRISMAT  UMR6508 (Chimie), GREYC UMR6072 (Informatique)&quot;, &quot;ville&quot;: &quot;Caen&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.3698, 43.2965, 5.3698, 43.2965], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.3698, 43.2965], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Marseille&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;4&quot;, &quot;noms des labos&quot;: &quot;CINAM UMR7325 (Physique), IM2NP UMR7334 (Physique), LP3 UMR7341 (Ing\u00e9nierie), PIIM UMR7345 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Marseille&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.0559, 43.6394, 7.0559, 43.6394], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.0559, 43.6394], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Valbonne&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;CRHEA UMR7073 (Physique)&quot;, &quot;ville&quot;: &quot;Valbonne&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.7245, 45.1885, 5.7245, 45.1885], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.7245, 45.1885], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Grenoble&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;7&quot;, &quot;noms des labos&quot;: &quot;CROMA UMR5130 (Ing\u00e9nierie), G2Elab UMR5269 (Ing\u00e9nierie), LMGP UMR5628 (Chimie), LPSC UMR5821 (IN2P3), LTM UMR5129 (Ing\u00e9nierie), N\u00e9el UPR2940 (Physique), SIMAP UMR5266 (Chimie)&quot;, &quot;ville&quot;: &quot;Grenoble&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.601, 48.853, 2.601, 48.853], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.601, 48.853], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Champs-sur-Marne&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;ESYCOM UMR9007 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Champs-sur-Marne&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.1333, 48.6833, 2.1333, 48.6833], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.1333, 48.6833], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Gif-sur-Yvette&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Geeps UMR8507 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Gif-sur-Yvette&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.1301, 48.8014, 2.1301, 48.8014], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.1301, 48.8014], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Versailles&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;GEMaC UMR8635 (Physique), ILV  UMR8180 (Chimie), SATIE UMR8029 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Versailles&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [6.1757, 49.1193, 6.1757, 49.1193], &quot;geometry&quot;: {&quot;coordinates&quot;: [6.1757, 49.1193], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Metz&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GeorgiaTech IRL2958 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Metz&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.0993, 49.4432, 1.0993, 49.4432], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.0993, 49.4432], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Rouen&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GPM UMR6634 (Physique)&quot;, &quot;ville&quot;: &quot;Rouen&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [0.6848, 47.3941, 0.6848, 47.3941], &quot;geometry&quot;: {&quot;coordinates&quot;: [0.6848, 47.3941], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Tours&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;GREMAN UMR7347 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Tours&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.7521, 48.5734, 7.7521, 48.5734], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.7521, 48.5734], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Strasbourg&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;IC UMR7177 (Chimie), Icube UMR7357   (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Strasbourg&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-0.5792, 44.8378, -0.5792, 44.8378], &quot;geometry&quot;: {&quot;coordinates&quot;: [-0.5792, 44.8378], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Bordeaux&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;ICMCB  UMR5026 (Chimie), IMS UMR5218 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Bordeaux&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.8772, 43.6119, 3.8772, 43.6119], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.8772, 43.6119], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Montpellier&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;3&quot;, &quot;noms des labos&quot;: &quot;IEM UMR5635 (Chimie), IES ? UMR5214 (Ing\u00e9nierie), L2C UMR5221 (Physique)&quot;, &quot;ville&quot;: &quot;Montpellier&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.0573, 50.6292, 3.0573, 50.6292], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.0573, 50.6292], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lille&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;IEMN UMR8520 (Ing\u00e9nierie), UCCS UMR8181 (Chimie)&quot;, &quot;ville&quot;: &quot;Lille&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [6.1844, 48.6921, 6.1844, 48.6921], &quot;geometry&quot;: {&quot;coordinates&quot;: [6.1844, 48.6921], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nancy&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IJL UMR7198 (Chimie)&quot;, &quot;ville&quot;: &quot;Nancy&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-1.5536, 47.2184, -1.5536, 47.2184], &quot;geometry&quot;: {&quot;coordinates&quot;: [-1.5536, 47.2184], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nantes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IMN UMR6502 (Chimie)&quot;, &quot;ville&quot;: &quot;Nantes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.7772, 45.7717, 4.7772, 45.7717], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.7772, 45.7717], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;\u00c9cully&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;INL UMR5270 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;\u00c9cully&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.262, 43.7102, 7.262, 43.7102], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.262, 43.7102], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Nice&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;InPhyNi UMR7010 (Physique)&quot;, &quot;ville&quot;: &quot;Nice&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.3522, 48.8566, 2.3522, 48.8566], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.3522, 48.8566], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Paris&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;2&quot;, &quot;noms des labos&quot;: &quot;INSP UMR7588 (Physique), IRCP UMR8247 (Chimie)&quot;, &quot;ville&quot;: &quot;Paris&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.087, 45.7772, 3.087, 45.7772], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.087, 45.7772], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Clermont-Ferrand&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Inst. PASCAL UMR6602 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Clermont-Ferrand&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.3359, 47.7508, 7.3359, 47.7508], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.3359, 47.7508], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Mulhouse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IS2M UMR7361 (Chimie)&quot;, &quot;ville&quot;: &quot;Mulhouse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-1.6778, 48.1173, -1.6778, 48.1173], &quot;geometry&quot;: {&quot;coordinates&quot;: [-1.6778, 48.1173], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Rennes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;ISCR UMR6226 (Chimie)&quot;, &quot;ville&quot;: &quot;Rennes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.0744, 48.2973, 4.0744, 48.2973], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.0744, 48.2973], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Troyes&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;L2N UMR7076 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Troyes&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [2.345, 48.9607, 2.345, 48.9607], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.345, 48.9607], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Villetaneuse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;LSPM UPR3407  (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Villetaneuse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.2611, 45.8336, 1.2611, 45.8336], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.2611, 45.8336], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Limoges&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#00294bff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;XLIM UMR7252 (Ing\u00e9nierie)&quot;, &quot;ville&quot;: &quot;Limoges&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-    geo_json_d6fca0b93b064a5cc0021a53cb99ed26.bindTooltip(
+    geo_json_7bbd9553ffda93170a9615d5b87ab62b.bindTooltip(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -774,7 +972,7 @@ document.write(`
 });
                      
     
-    geo_json_d6fca0b93b064a5cc0021a53cb99ed26.bindPopup(
+    geo_json_7bbd9553ffda93170a9615d5b87ab62b.bindPopup(
     function(layer){
     let div = L.DomUtil.create(&#x27;div&#x27;);
     
@@ -808,7 +1006,169 @@ document.write(`
 });
                      
     
-            geo_json_d6fca0b93b064a5cc0021a53cb99ed26.addTo(map_91d0d592edc3833dcf8e2b6965ed7202);
+            geo_json_7bbd9553ffda93170a9615d5b87ab62b.addTo(map_66d7a15ca180d0845fda651da01108d7);
+        
+    
+        function geo_json_6211061de18e31298f95475c92b616c5_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;color&quot;: &quot;#e30a1dff&quot;, &quot;fillColor&quot;: &quot;#e30a1dff&quot;, &quot;fillOpacity&quot;: 0.5, &quot;weight&quot;: 2};
+            }
+        }
+        function geo_json_6211061de18e31298f95475c92b616c5_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.75};
+            }
+        }
+        function geo_json_6211061de18e31298f95475c92b616c5_pointToLayer(feature, latlng) {
+            var opts = {
+  &quot;stroke&quot;: true,
+  &quot;color&quot;: &quot;#3388ff&quot;,
+  &quot;weight&quot;: 3,
+  &quot;opacity&quot;: 1.0,
+  &quot;lineCap&quot;: &quot;round&quot;,
+  &quot;lineJoin&quot;: &quot;round&quot;,
+  &quot;dashArray&quot;: null,
+  &quot;dashOffset&quot;: null,
+  &quot;fill&quot;: true,
+  &quot;fillColor&quot;: &quot;#3388ff&quot;,
+  &quot;fillOpacity&quot;: 0.2,
+  &quot;fillRule&quot;: &quot;evenodd&quot;,
+  &quot;bubblingMouseEvents&quot;: true,
+  &quot;radius&quot;: 5,
+};
+            
+            let style = geo_json_6211061de18e31298f95475c92b616c5_styler(feature)
+            Object.assign(opts, style)
+            
+            return new L.CircleMarker(latlng, opts)
+        }
+
+        function geo_json_6211061de18e31298f95475c92b616c5_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                            geo_json_6211061de18e31298f95475c92b616c5.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_6211061de18e31298f95475c92b616c5_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_6211061de18e31298f95475c92b616c5 = L.geoJson(null, {
+                onEachFeature: geo_json_6211061de18e31298f95475c92b616c5_onEachFeature,
+            
+                style: geo_json_6211061de18e31298f95475c92b616c5_styler,
+                pointToLayer: geo_json_6211061de18e31298f95475c92b616c5_pointToLayer,
+            ...{
+}
+        });
+
+        function geo_json_6211061de18e31298f95475c92b616c5_add (data) {
+            geo_json_6211061de18e31298f95475c92b616c5
+                .addData(data);
+        }
+            geo_json_6211061de18e31298f95475c92b616c5_add({&quot;bbox&quot;: [-0.3707, 43.6047, 288.1, 50.6292], &quot;features&quot;: [{&quot;bbox&quot;: [2.1333, 48.6833, 2.1333, 48.6833], &quot;geometry&quot;: {&quot;coordinates&quot;: [2.1333, 48.6833], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Gif-sur-Yvette&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IRAMIS (CEA)&quot;, &quot;ville&quot;: &quot;Gif-sur-Yvette&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.7245, 45.1885, 5.7245, 45.1885], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.7245, 45.1885], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Grenoble&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;5&quot;, &quot;noms des labos&quot;: &quot;IRIG-MEM (CEA), IRIG\u2010PHELIQS  (CEA), IRIG\u2010SYMMES (CEA), IRIG-NPSC (CEA), LETI (CEA)&quot;, &quot;ville&quot;: &quot;Grenoble&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-0.3707, 49.1829, -0.3707, 49.1829], &quot;geometry&quot;: {&quot;coordinates&quot;: [-0.3707, 49.1829], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Caen&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IPDN  (MURATA/U Caen)&quot;, &quot;ville&quot;: &quot;Caen&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [5.978888888888889, 49.49722222222222, 5.978888888888889, 49.49722222222222], &quot;geometry&quot;: {&quot;coordinates&quot;: [5.978888888888889, 49.49722222222222], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Esch-sur-Alzette&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;LIST (Autonome)&quot;, &quot;ville&quot;: &quot;Esch-sur-Alzette&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.8357, 45.764, 4.8357, 45.764], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.8357, 45.764], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lyon&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;LGEF (INSA)&quot;, &quot;ville&quot;: &quot;Lyon&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [1.4442, 43.6047, 1.4442, 43.6047], &quot;geometry&quot;: {&quot;coordinates&quot;: [1.4442, 43.6047], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Toulouse&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;LGP (Autonome)&quot;, &quot;ville&quot;: &quot;Toulouse&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [6.1757, 49.1193, 6.1757, 49.1193], &quot;geometry&quot;: {&quot;coordinates&quot;: [6.1757, 49.1193], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Metz&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Institut Lafayette (Autonome)&quot;, &quot;ville&quot;: &quot;Metz&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [7.563611111111111, 47.58583333333333, 7.563611111111111, 47.58583333333333], &quot;geometry&quot;: {&quot;coordinates&quot;: [7.563611111111111, 47.58583333333333], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Saint-Louis&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;ISL (Autonome)&quot;, &quot;ville&quot;: &quot;Saint-Louis&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [0.4791666666666667, 48.714444444444446, 0.4791666666666667, 48.714444444444446], &quot;geometry&quot;: {&quot;coordinates&quot;: [0.4791666666666667, 48.714444444444446], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Palaiseau&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;Onera (Onera)&quot;, &quot;ville&quot;: &quot;Palaiseau&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [288.1, 45.4, 288.1, 45.4], &quot;geometry&quot;: {&quot;coordinates&quot;: [288.1, 45.4], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Sherbrooke&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;IRL LN2 (Sherbrooke U.)&quot;, &quot;ville&quot;: &quot;Sherbrooke&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [3.0573, 50.6292, 3.0573, 50.6292], &quot;geometry&quot;: {&quot;coordinates&quot;: [3.0573, 50.6292], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Lille&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;L2EP (U. Lille)&quot;, &quot;ville&quot;: &quot;Lille&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [4.034722222222222, 49.26277777777778, 4.034722222222222, 49.26277777777778], &quot;geometry&quot;: {&quot;coordinates&quot;: [4.034722222222222, 49.26277777777778], &quot;type&quot;: &quot;Point&quot;}, &quot;id&quot;: &quot;Reims&quot;, &quot;properties&quot;: {&quot;__folium_color&quot;: &quot;#e30a1dff&quot;, &quot;nombre de labos CNRS&quot;: &quot;1&quot;, &quot;noms des labos&quot;: &quot;MATIM (URCA)&quot;, &quot;ville&quot;: &quot;Reims&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+        
+    
+    geo_json_6211061de18e31298f95475c92b616c5.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+    
+    let handleObject = feature =&gt; {
+        if (feature === null) {
+            return &#x27;&#x27;;
+        } else if (typeof(feature)==&#x27;object&#x27;) {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = [&quot;ville&quot;, &quot;nombre de labos CNRS&quot;, &quot;noms des labos&quot;];
+    let aliases = [&quot;ville&quot;, &quot;nombre de labos CNRS&quot;, &quot;noms des labos&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i]}&lt;/th&gt;
+            
+            &lt;td&gt;${handleObject(layer.feature.properties[v])}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  &quot;sticky&quot;: true,
+  &quot;className&quot;: &quot;foliumtooltip&quot;,
+});
+                     
+    
+    geo_json_6211061de18e31298f95475c92b616c5.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+    
+    let handleObject = feature =&gt; {
+        if (feature === null) {
+            return &#x27;&#x27;;
+        } else if (typeof(feature)==&#x27;object&#x27;) {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = [&quot;ville&quot;, &quot;nombre de labos CNRS&quot;, &quot;noms des labos&quot;];
+    let aliases = [&quot;ville&quot;, &quot;nombre de labos CNRS&quot;, &quot;noms des labos&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i].toLocaleString()}&lt;/th&gt;
+            
+            &lt;td&gt;${handleObject(layer.feature.properties[v]).toLocaleString()}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  &quot;className&quot;: &quot;foliumpopup&quot;,
+});
+                     
+    
+            geo_json_6211061de18e31298f95475c92b616c5.addTo(map_66d7a15ca180d0845fda651da01108d7);
+        
+    
+            var layer_control_099deb2952b93a74fcc3de4163239977_layers = {
+                base_layers : {
+                    &quot;openstreetmap&quot; : tile_layer_345ae137e4f2745d20ccd4911c142f27,
+                },
+                overlays :  {
+                    &quot;CNRS labs&quot; : geo_json_7bbd9553ffda93170a9615d5b87ab62b,
+                    &quot;non CNRS labs&quot; : geo_json_6211061de18e31298f95475c92b616c5,
+                },
+            };
+            let layer_control_099deb2952b93a74fcc3de4163239977 = L.control.layers(
+                layer_control_099deb2952b93a74fcc3de4163239977_layers.base_layers,
+                layer_control_099deb2952b93a74fcc3de4163239977_layers.overlays,
+                {
+  &quot;position&quot;: &quot;topright&quot;,
+  &quot;collapsed&quot;: true,
+  &quot;autoZIndex&quot;: true,
+}
+            ).addTo(map_66d7a15ca180d0845fda651da01108d7);
+
         
 &lt;/script&gt;
 &lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div></div></div>
@@ -851,7 +1211,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Welcome to your Jupyter Book</p>
+        <p class="prev-next-title">Recensement des laboratoires grand gap (en France)</p>
       </div>
     </a>
 </div>
